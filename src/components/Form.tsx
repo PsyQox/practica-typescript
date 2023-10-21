@@ -1,31 +1,44 @@
-import {useState} from 'react'
+import useNewSubForm from '../hooks/useNewSubForm'
 import { Sub } from '../types'
 
-interface FormState{
-   inputValues: Sub
-}
 
 interface FormProps{
     // onNewSub: React.Dispatch<React.SetStateAction<Sub[]>>
     onNewSub:(newSub:Sub) => void
 }
 
+
 const Form =({onNewSub}:FormProps)=>{
-    const [inputValues, setInputValues] = useState<FormState["inputValues"]>({
-        nick:'',
-        subMonths:0,
-        avatar:'',
-        description:''
-    })
+
+   
+    // const [inputValues, setInputValues] = useState<FormState["inputValues"]>(INITIAL_STATE)
+    // const [inputValues, dispatch] = useReducer(formReducer, INITIAL_STATE)
+    const [inputValues, dispatch] = useNewSubForm()
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault()
         onNewSub(inputValues)
+        handleClear()
     }
 
     const handleChange =(event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)=>{
-        setInputValues({
-            ...inputValues, [event.target.name]:[event.target.value]
+        // const {name, value} = event.target
+       dispatch({
+            type:"change_value",
+            payload: {
+                inputName: event.target.name,
+                inputValue: event.target.value
+            }
+       })
+       
+        // setInputValues({
+        //     ...inputValues, [event.target.name]:[event.target.value]
+        // })
+    }
+
+    const handleClear = ()=>{
+        dispatch({
+            type:"clear"
         })
     }
 
@@ -36,7 +49,8 @@ const Form =({onNewSub}:FormProps)=>{
                 <input onChange={handleChange} type="number" value={inputValues.subMonths} name="subMonths" placeholder="subMonths" />
                 <input onChange={handleChange} type="text" value={inputValues.avatar} name="avatar" placeholder="avatar" />
                 <textarea onChange={handleChange} value={inputValues.description} name="description" placeholder="description" />
-                <button>Save new sub!</button>
+                <button onClick={handleClear} type="button">Clear de form</button>
+                <button type='submit'>Save new sub!</button>
             </form>
         </div>
     )

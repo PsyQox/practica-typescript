@@ -9,21 +9,6 @@ interface AppState {
   newSubsNumber: number
 }
 
-const INITIAL_STATE =[
-  {
-    nick: 'dapelu',
-    subMonths: 3,
-    avatar: 'https://i.pravatar.cc/150?u=dapelu',
-    description: 'Hace de moderador a veces'
-  },
-  {
-    nick: 'sergio_serrano',
-    subMonths: 7,
-    avatar: 'https://i.pravatar.cc/150?u=sergio_serrano'
-  }
-] 
-
-
 function App() {
   
   // const [subs, setSubs] = useState<Array<Sub>>([]);
@@ -31,16 +16,18 @@ function App() {
   const [newSubsNumber, setNewSubsNumber] = useState<AppState['newSubsNumber']>(0)
 
 useEffect(()=>{
-  setSubs(INITIAL_STATE)
+  
 },[])
 //El void indica que no devolvera un valor, osea solamente ejecutara una funcion
 const handleNewSub=(newSub: Sub):void=>{
   setSubs((subs)=> [...subs, newSub])
+  setNewSubsNumber(n => n + 1)
 }
   return (
     <>
       <h1>Subs</h1>
         <List subs={subs}/>
+        New subs number: {newSubsNumber}
         <Form onNewSub={handleNewSub}/>
     </>
   )
